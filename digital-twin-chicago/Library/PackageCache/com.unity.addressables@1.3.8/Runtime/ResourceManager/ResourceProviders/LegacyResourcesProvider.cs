@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+using UnityEngine.ResourceManagement.Util;
+
+namespace UnityEngine.ResourceManagement.ResourceProviders
+{
+    /// <summary>
+    /// Provides assets loaded via Resources.LoadAsync API.
+    /// </summary>
+    [DisplayName("Assets from Legacy Resources")]
+    public class LegacyResourcesProvider : ResourceProviderBase
+    {
+        internal class InternalOp
+        {
+            AsyncOperation m_RequestOperation;
+            ProvideHandle m_PI;
+            
+            public void Start(ProvideHandle provideHandle)
+            {
+                m_PI = provideHandle;
+
+                provideHandle.SetProgressCallback(PercentComplete);
+                m_RequestOperation = Resources.LoadAsync(m_PI.Location.InternalId, m_PI.Type);
+                m_RequestOperation.completed += AsyncOperationCompleted;
+            }
+
+            private void AsyncOperationCompleted(AsyncOperation op)
+            {
+                var request = op as ResourceRequest;
+                object result = request != null ? request.asset : null;
+                result = result != null && m_PI.Type.IsAssignableFrom(result.GetType()) ? result : null;
+                m_PI.Complete(result, result != null, null);
+            }
+
+            public float PercentComplete() { return m_RequestOperation != null ? m_RequestOperation.progress : 0.0f; }
+        }
+
+        public override void Provide(ProvideHandle pi)
+        {
+            Type t = pi.Type;
+            bool isList = t.IsGenericType && typeof(IList<>) == t.GetGenericTypeDefinition();
+
+            if (t.IsArray || isList)
+            {
+                object result = null;
+                if (t.IsArray)
+                    result = ResourceManagerConfig.CreateArrayResult(t, Resources.LoadAll(pi.Location.InternalId, t.GetElementType()));
+                else
+                    result = ResourceManagerConfig.CreateListResult(t, Resources.LoadAll(pi.Location.InternalId, t.GetGenericArguments()[0]));
+
+                pi.Complete(result, result != null, null);
+            }
+            else
+            {
+                string assetPath = pi.Location.InternalId;
+                var i = assetPath.LastIndexOf('[');
+                if (i > 0)
+                {
+                    var i2 = assetPath.LastIndexOf(']');
+                    if (i2 < i)
+                    {
+                        pi.Complete<AssetBundle>(null, false, new Exception(string.Format("Invalid index format in internal id {0}", assetPath)));
+                    }
+                    else
+                    {
+                        var subObjectName = assetPath.Substring(i + 1, i2 - (i + 1));
+                        assetPath = assetPath.Substring(0, i);
+                        var objs = Resources.LoadAll(assetPath, pi.Type);
+                        object result = null;
+                        foreach (var o in objs)
+                        {
+                            if (o.name == subObjectName)
+                            {
+                                if (pi.Type.IsAssignableFrom(o.GetType()))
+                                {
+                                    result = o;
+                                    break;
+                                }
+                            }
+                        }
+                        pi.Complete(result, result != null, null);
+                    }
+                }
+                else
+                {
+                    new InternalOp().Start(pi);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void Release(IResourceLocation location, object asset)
+        {
+            if (location == null)
+                throw new ArgumentNullException("location");
+            var obj = asset as Object;
+            //GameObjects cannot be resleased via Object.Destroy because they are considered an asset
+            //but they can't be unloaded via Resources.UnloadAsset since they are NOT an asset?
+            if (obj != null && !(obj is GameObject))
+                Resources.UnloadAsset(obj);
+        }
+    }
+}
