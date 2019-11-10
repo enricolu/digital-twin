@@ -21,6 +21,8 @@ To begin with, captors and sensors are required to obtain data from the physical
 are placed at three different beach stations located in Chicago are used. The stations are located at Foster Avenue, Oak Street,
 and 63rd Street. Every hour, the data collected by the sensors is uploaded to a public dataset. We obtained the coordinates of the sensors (Courtesy of Kendall W. Anderson)
 
+![63rd Street sensors view ](https://drive.google.com/open?id=1YOEsNzNtfKVGBXJMPXM5zEdNl2Fvfj3s)
+
 Our objective is to enable a user to view the data, interact with the sensors, change the data sensors in the data to see how the environment reacts.
 For example, a user can view how the digital city changes if the temperature is changed for a date in the future.
 
