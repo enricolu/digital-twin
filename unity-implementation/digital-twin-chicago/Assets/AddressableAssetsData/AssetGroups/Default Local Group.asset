@@ -17,6 +17,10 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 4ec2dc5a6fb844f039a0c672dba49797
   m_SerializeEntries:
+  - m_GUID: 091eb113e53a5b041a195b9f93dffce5
+    m_Address: Assets/Wrld/Scenes/UnityWorldSpace.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   - m_GUID: 9062234c910544b16863d5b0ccd6c9a8
     m_Address: Assets/Scenes/SampleScene.unity
     m_ReadOnly: 0

@@ -5,14 +5,14 @@ using Wrld.Scripts.Utilities;
 using UnityEditor;
 #endif
 
-/*****************************************
+/******************************************
  * Cynthia H.
  * 
  * This script will contain different
  * edits related to the map of chicago
  *such as adding sensors, creating 
  *a controller which hovers over the city
- *****************************************/
+ ******************************************/
 
 public class WrldMap : MonoBehaviour
 {
