@@ -1,6 +1,7 @@
 # Digital Twin for the city of Chicago
 
 In this repository, we introduce a smart city digital twin of chicago. 
+![Chicago Map Sensors view](unity-implementation/demo/chigago-overview-sensors.png)
 
 ## :smirk:Ok but...what is a digital twin  ?
 
@@ -14,14 +15,12 @@ A digital twin requires three parts:
 
 A digital twin is an essential part for a smart city. In this bid, we created a digital replica of the city of Chicago. In the digital replica, we display data from sensors
 placed across the beach. This can be used for urban planning, simulate natural catastrophes and prepare for them.
-
+![63rd Street sensor close-up view](unity-implementation/demo/63rdstreet-sensor-closeup.gif)
 ## :trollface: Gimme the magic formula behind this
 
 To begin with, captors and sensors are required to obtain data from the physical product in a real environment. In our case, sensors which 
 are placed at three different beach stations located in Chicago are used. The stations are located at Foster Avenue, Oak Street,
 and 63rd Street. Every hour, the data collected by the sensors is uploaded to a public dataset. We obtained the coordinates of the sensors (Courtesy of Kendall W. Anderson)
-
-![63rd Street sensors view ](https://drive.google.com/open?id=1YOEsNzNtfKVGBXJMPXM5zEdNl2Fvfj3s)
 
 Our objective is to enable a user to view the data, interact with the sensors, change the data sensors in the data to see how the environment reacts.
 For example, a user can view how the digital city changes if the temperature is changed for a date in the future.
